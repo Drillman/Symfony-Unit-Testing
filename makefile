@@ -22,3 +22,6 @@ migration:
 
 fixtures:
 	echo -ne "y\n" | $(DOCKER_COMPOSE_RUN) php bin/console doctrine:fixtures:load
+
+entity:
+	${DOCKER_COMPOSE_RUN} php bin/console make:entity
