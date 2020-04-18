@@ -33,7 +33,7 @@ services:
         environment:
             - POSTGRES_PASSWORD=password
             - POSTGRES_USER=user
-            - POSTGRES_DB=gandi
+            - POSTGRES_DB=unit
             - PGDATA=/var/lib/postgresql/data
         ports:
             - 5432:5432
