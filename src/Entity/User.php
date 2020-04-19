@@ -42,6 +42,11 @@ class User
      */
     private $password;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Todolist", inversedBy="user_id")
+     */
+    private $todolist;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -117,6 +122,18 @@ class User
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getTodolist(): ?Todolist
+    {
+        return $this->todolist;
+    }
+
+    public function setTodolist(?Todolist $todolist): self
+    {
+        $this->todolist = $todolist;
 
         return $this;
     }
