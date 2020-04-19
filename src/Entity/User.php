@@ -107,7 +107,7 @@ class User
             throw new InvalidArgumentException(
                 sprintf(
                     '"%s" is not valid dude',
-                    $this->getAge(),$this->getName(),!$this->getAge(),!$this->getEmail()
+                    $this->getAge(),$this->getName(),$this->getAge(),$this->getEmail()
                 )
             );
         }
