@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -102,14 +103,26 @@ class User
 
     public function isValid(): bool
     {
-        if (!$this->getFirstname() || !$this->getName() || !$this->getEmail() || $this->getAge()) {
-            return false;
+        if (!$this->getFirstname() || !$this->getName() || !$this->getEmail() || !$this->getAge()) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '"%s" is not valid dude',
+                    $this->getAge(),$this->getName(),!$this->getAge(),!$this->getEmail()
+                )
+            );
         }
         if (strlen($this->getPassword()) > 40 || strlen($this->getPassword()) < 8) {
-            return false;
+            throw new InvalidArgumentException(
+                'The password must be understood in 8 and 40'
+            );
         }
         if ($this->getAge() < 13) {
-            return false;
+            throw new InvalidArgumentException(
+                sprintf(
+                    '"%s" too young bro',
+                    $this->getAge()
+                )
+            );
         }
         return true;
     }
