@@ -97,7 +97,7 @@ class User
 
     public function isValid(): bool
     {
-        if (!$this->firstname || !$this->lastname || !$this->email || $this->age) {
+        if (!$this->getFirstname() || !$this->getName() || !$this->getEmail() || $this->getAge()) {
             return false;
         }
         if (strlen($this->getPassword()) > 40 || strlen($this->getPassword()) < 8) {
