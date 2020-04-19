@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Table(name="UserAccount")
  */
 class User
 {
@@ -35,6 +36,11 @@ class User
      * @ORM\Column(type="integer")
      */
     private $age;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
 
     public function getId(): ?int
     {
@@ -85,6 +91,32 @@ class User
     public function setAge(int $age): self
     {
         $this->age = $age;
+
+        return $this;
+    }
+
+    public function isValid(): bool
+    {
+        if (!$this->firstname || !$this->lastname || !$this->email || $this->age) {
+            return false;
+        }
+        if (strlen($this->getPassword()) > 40 || strlen($this->getPassword()) < 8) {
+            return false;
+        }
+        if ($this->getAge() < 13) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
 
         return $this;
     }
