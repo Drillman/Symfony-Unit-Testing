@@ -13,4 +13,5 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
-/database/
+/database
+.composer
