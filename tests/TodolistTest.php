@@ -1,40 +1,37 @@
 <?php
+use App\Entity\Item;
 use App\Entity\User;
+
+use App\Entity\Todolist;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-
-final class TodolistTest extends KernelTestCase
+final class TodolistTest extends TestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
+    protected $todolist;
+    protected $user;
+    protected $validItem;
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
+        $this->user = new User();
+        $this->user->setName("Lucas");
+        $this->user->setFirstname("Lavander");
+        $this->user->setPassword("TestDepuisLespace");
+        $this->user->setAge(16);
+        $this->user->setEmail("Lucaslavander@test.fr");
 
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        $this->todolist = new TodoList();
+        $this->todolist->addUserId($this->user);
+
+        $this->validItem = new Item();
+        $this->validItem->setName('learn Python');
+        $this->validItem->setContent('You need to learn Python');
+        $this->validItem->setCreatedAt(new DateTime());
+
     }
-
-    // public function testSearchByName()
-    // {
-    //     $product = $this->entityManager
-    //         ->getRepository(Product::class)
-    //         ->findOneBy(['name' => 'Priceless widget'])
-    //     ;
-
-    //     $this->assertSame(14.50, $product->getPrice());
-    // }
-
-    protected function tearDown(): void
+    public function testCanAddItem(): void
     {
-        parent::tearDown();
-
-        $this->entityManager->close();
-        $this->entityManager = null;
+        $validation = $this->todolist->canAddItem($this->validItem);
+        $this->assertEquals(true, $validation);
     }
 }

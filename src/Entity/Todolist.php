@@ -114,10 +114,11 @@ class Todolist
             return 2;
         }
         // Test if the item name is unique
-        $itemsName = array_map(function($item) {
-            return $item->getName();
-        }, (array) $todoListItems);
-        if (in_array($item->getName(), $itemsName)) {
+        $itemsName = $todoListItems->map(function($item) {
+            var_dump($item);
+            return $item->name;
+        });
+        if (in_array($item->getName(), (array) $itemsName)) {
             return 3;
         }
 
