@@ -107,8 +107,8 @@ class User
         if (!$this->getFirstname() || !$this->getName()) {
             throw new Exception('name or firstname is empty');
         }
-        if (filter_var($this->getEmail(), FILTER_VALIDATE_EMAIL)) {
-            throw new Exception($this->getEmail().'is not a valid email format');
+        if (!filter_var($this->getEmail(), FILTER_VALIDATE_EMAIL)) {
+            throw new Exception($this->getEmail().' is not a valid email format');
         }
         if (strlen($this->getPassword()) > 40 || strlen($this->getPassword()) < 8) {
             throw new Exception(
