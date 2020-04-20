@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Todolist;
 use App\Form\TodolistType;
 use App\Repository\TodolistRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use JMS\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/todolist")
@@ -18,11 +20,13 @@ class TodolistController extends AbstractController
     /**
      * @Route("/", name="todolist_index", methods={"GET"})
      */
-    public function index(TodolistRepository $todolistRepository): Response
+    public function index(TodolistRepository $todolistRepository,SerializerInterface $serializer): Response
     {
-        return $this->render('todolist/index.html.twig', [
-            'todolists' => $todolistRepository->findAll(),
-        ]);
+        $todolistJson = $serializer->serialize($todolistRepository->findAll(), 'json');
+        $response = new Response($todolistJson);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**

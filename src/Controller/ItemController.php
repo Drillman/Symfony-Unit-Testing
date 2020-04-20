@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\Item;
 use App\Form\ItemType;
 use App\Repository\ItemRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use JMS\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 
 /**
  * @Route("/item")
@@ -18,11 +21,13 @@ class ItemController extends AbstractController
     /**
      * @Route("/", name="item_index", methods={"GET"})
      */
-    public function index(ItemRepository $itemRepository): Response
+    public function index(ItemRepository $itemRepository,SerializerInterface $serializer): Response
     {
-        return $this->render('item/index.html.twig', [
-            'items' => $itemRepository->findAll(),
-        ]);
+        $itemJson = $serializer->serialize($itemRepository->findAll(), 'json');
+        $response = new Response($itemJson);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**
