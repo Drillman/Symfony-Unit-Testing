@@ -111,22 +111,28 @@ class User
                 )
             );
         }
+    }
+    public function isValidPassword(): bool
+    {
         if (strlen($this->getPassword()) > 40 || strlen($this->getPassword()) < 8) {
             throw new InvalidArgumentException(
                 'The password must be understood in 8 and 40'
             );
         }
+        return true;
+    }
+    public function isValidAge(): bool
+    {
         if ($this->getAge() < 13) {
             throw new InvalidArgumentException(
                 sprintf(
-                    '"%s" too young bro',
-                    $this->getAge()
+                    '"%s" too young bro',$this->getAge()  
                 )
             );
         }
         return true;
     }
-
+    
     public function getPassword(): ?string
     {
         return $this->password;
