@@ -88,4 +88,14 @@ class Item
 
         return $this;
     }
+
+    public function isValid(): bool
+    {
+        if (sizeof($this->getContent()) > 1000) {
+            return false;
+        }
+        if (!$this->getCreatedAt()) {
+            return false;
+        }
+    }
 }

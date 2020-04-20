@@ -106,14 +106,17 @@ class User
     {
         if (!$this->getFirstname() || !$this->getName()) {
             throw new Exception('name or firstname is empty');
+            return false;
         }
         if (!filter_var($this->getEmail(), FILTER_VALIDATE_EMAIL)) {
             throw new Exception($this->getEmail().' is not a valid email format');
+            return false;
         }
         if (strlen($this->getPassword()) > 40 || strlen($this->getPassword()) < 8) {
             throw new Exception(
                 'The password length must be between 8 and 40'
             );
+            return false;
         }
         if ($this->getAge() < 13) {
             throw new Exception('The age can\'t be under 13');

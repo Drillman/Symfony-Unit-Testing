@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TodolistRepository")
@@ -99,5 +102,36 @@ class Todolist
         }
 
         return $this;
+    }
+
+    public function canAddItem(Item $item)
+    {
+        $todoListItems = $this->getItems();
+        if (sizeof($todoListItems) >= 10) {
+            return null;
+        }
+        if (!$item->isValid()) {
+            return false;
+        }
+        // Test if the item name is unique
+        $itemsName = array_map(function($item) {
+            return $item->getName();
+        }, (array) $todoListItems);
+        if (in_array($item->getName(), $itemsName)) {
+            return false;
+        }
+
+        // Test if it's been at least 30 minutes since the previous creation
+        $latestItemAddDate = array_reduce((array) $todoListItems, function($acc, $el) {
+            return $el->getId() > $acc->getId() ? $el : $acc;
+        })->getCreatedAt();
+        $allowedDate = new DateTime($latestItemAddDate->format('Y-m-d H:i:s'));
+        $allowedDate = $allowedDate->add(new DateInterval('PT30M')); // latestItem add date + 30 minutes
+        $interval = $allowedDate->diff(new DateTime());
+        if((int) $interval->format('%i') < 30) {
+            return false;
+        }
+
+        return true;
     }
 }
