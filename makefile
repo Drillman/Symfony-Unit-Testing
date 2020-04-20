@@ -25,3 +25,6 @@ fixtures:
 
 entity:
 	${DOCKER_COMPOSE_RUN} php bin/console make:entity
+
+test:
+	${DOCKER_COMPOSE_RUN} php ./vendor/bin/phpunit tests

@@ -111,6 +111,7 @@ class User
                 )
             );
         }
+        return true;
     }
     public function isValidPassword(): bool
     {
