@@ -16,15 +16,4 @@ final class UserTest extends TestCase
         $validation = $user->isValid();
         $this->assertEquals(true, $validation);
     }
-
-    public function testNameEmpty(): void
-    {
-        $user = new User();
-        $user->setFirstname("Lavander");
-        $user->setPassword("TestDepuisLespace");
-        $user->setAge(16);
-        $user->setEmail("Lucas.Lavander@test.fr");
-        $validation = $user->isValid();
-        $this->assertEquals(true, $validation);
-    }
 }

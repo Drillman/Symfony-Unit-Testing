@@ -110,19 +110,11 @@ class User
         if (filter_var($this->getEmail(), FILTER_VALIDATE_EMAIL)) {
             throw new Exception($this->getEmail().'is not a valid email format');
         }
-        return true;
-    }
-    public function isValidPassword(): bool
-    {
         if (strlen($this->getPassword()) > 40 || strlen($this->getPassword()) < 8) {
             throw new Exception(
                 'The password length must be between 8 and 40'
             );
         }
-        return true;
-    }
-    public function isValidAge(): bool
-    {
         if ($this->getAge() < 13) {
             throw new Exception('The age can\'t be under 13');
         }
