@@ -1,4 +1,4 @@
-.PHONY: install migration migration/dump restart start stop
+.PHONY: install migration migration/dump restart start stop test
 
 DOCKER_COMPOSE_RUN=docker-compose run --rm --no-deps
 

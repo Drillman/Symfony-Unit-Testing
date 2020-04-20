@@ -17,20 +17,14 @@ final class UserTest extends TestCase
         $this->assertEquals(true, $validation);
     }
 
-    public function testIsValidPassword(): void
+    public function testNameEmpty(): void
     {
         $user = new User();
+        $user->setFirstname("Lavander");
         $user->setPassword("TestDepuisLespace");
-        $validation = $user->isValidPassword();
-        $this->assertEquals(true, $validation);
-    }
-
-    public function testIsValidAge(): void
-    {
-        $user = new User();
         $user->setAge(16);
-        $validation = $user->isValidAge();
+        $user->setEmail("Lucas.Lavander@test.fr");
+        $validation = $user->isValid();
         $this->assertEquals(true, $validation);
     }
-    
 }

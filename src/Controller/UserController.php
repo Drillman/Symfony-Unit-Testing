@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/", name="user_index", methods={"GET"})
+     * @Route("/", methods={"GET"})
      */
     public function index(UserRepository $userRepository, SerializerInterface $serializer): Response
     {
@@ -30,26 +30,22 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="user_new", methods={"POST"})
+     * @Route("/new", methods={"POST"})
      */
-    public function new(Request $request): JsonResponse
+    public function new(Request $request): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+        $user->setName($request->get('name'))
+            ->setFirstname($request->get('firstname'))
+            ->setEmail($request->get('email'))
+            ->setPassword($request->get('password'))
+            ->setAge($request->get('age'));
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('user_index');
-        }
-
-        return $this->render('user/new.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
-        ]);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+        $response = new Response(null,201,[]);
+        return $response;
     }
 
     /**

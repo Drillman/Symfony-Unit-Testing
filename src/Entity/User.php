@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -103,21 +104,19 @@ class User
 
     public function isValid(): bool
     {
-        if (!$this->getFirstname() || !$this->getName() || !$this->getEmail() || !$this->getAge()) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    '"%s" is not valid dude',
-                    $this->getAge(),$this->getName(),$this->getAge(),$this->getEmail()
-                )
-            );
+        if (!$this->getFirstname() || !$this->getName()) {
+            throw new Exception('name or firstname is empty');
+        }
+        if (filter_var($this->getEmail(), FILTER_VALIDATE_EMAIL)) {
+            throw new Exception($this->getEmail().'is not a valid email format');
         }
         return true;
     }
     public function isValidPassword(): bool
     {
         if (strlen($this->getPassword()) > 40 || strlen($this->getPassword()) < 8) {
-            throw new InvalidArgumentException(
-                'The password must be understood in 8 and 40'
+            throw new Exception(
+                'The password length must be between 8 and 40'
             );
         }
         return true;
@@ -125,15 +124,11 @@ class User
     public function isValidAge(): bool
     {
         if ($this->getAge() < 13) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    '"%s" too young bro',$this->getAge()  
-                )
-            );
+            throw new Exception('The age can\'t be under 13');
         }
         return true;
     }
-    
+
     public function getPassword(): ?string
     {
         return $this->password;
