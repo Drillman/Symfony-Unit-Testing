@@ -91,11 +91,13 @@ class Item
 
     public function isValid(): bool
     {
-        if (sizeof($this->getContent()) > 1000) {
+        $contentSize = strlen($this->getContent());
+        if ($contentSize <= 2 || $contentSize > 1000) {
             return false;
         }
         if (!$this->getCreatedAt()) {
             return false;
         }
+        return true;
     }
 }

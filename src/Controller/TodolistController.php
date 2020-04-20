@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Item;
 use App\Entity\Todolist;
 use App\Form\TodolistType;
 use App\Repository\TodolistRepository;
@@ -22,8 +23,13 @@ class TodolistController extends AbstractController
      */
     public function index(TodolistRepository $todolistRepository,SerializerInterface $serializer): Response
     {
-        $todolistJson = $serializer->serialize($todolistRepository->findAll(), 'json');
-        $response = new Response($todolistJson);
+        $todoList = new TodoList();
+        $item = new Item();
+        $item->setContent('This is my content');
+        $res = $todoList->canAddItem($item);
+        $res = $serializer->serialize($res, 'json');
+        // $todolistJson = $serializer->serialize($todolistRepository->findAll(), 'json');
+        $response = new Response($res);
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;

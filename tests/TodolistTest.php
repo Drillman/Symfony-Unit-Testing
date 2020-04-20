@@ -20,15 +20,15 @@ final class TodolistTest extends KernelTestCase
             ->getManager();
     }
 
-    public function testSearchByName()
-    {
-        $product = $this->entityManager
-            ->getRepository(Product::class)
-            ->findOneBy(['name' => 'Priceless widget'])
-        ;
+    // public function testSearchByName()
+    // {
+    //     $product = $this->entityManager
+    //         ->getRepository(Product::class)
+    //         ->findOneBy(['name' => 'Priceless widget'])
+    //     ;
 
-        $this->assertSame(14.50, $product->getPrice());
-    }
+    //     $this->assertSame(14.50, $product->getPrice());
+    // }
 
     protected function tearDown(): void
     {
