@@ -96,27 +96,32 @@ class Todolist
     {
         $todoListItems = $this->getItems();
         if (sizeof($todoListItems) >= 10) {
-            return 1;
+            return null;
         }
         if (!$item->isValid()) {
-            return 2;
+            return null;
         }
         // Test if the item name is unique
         $itemsName = $todoListItems->map(function($item) {
             return $item->getName();
         });
         if (in_array($item->getName(), (array) $itemsName)) {
-            return 3;
+            return null;
         }
 
         // Test if it's been at least 30 minutes since the previous creation
         $latestItemAddDate = $todoListItems->last()->getCreatedAt();
         if (!$latestItemAddDate) { return $item; }
-        $allowedDate = new DateTime($latestItemAddDate->format('Y-m-d H:i:s'));
-        $allowedDate = $allowedDate->add(new DateInterval('PT30M')); // latestItem add date + 30 minutes
-        $interval = $allowedDate->diff(new DateTime());
-        if((int) $interval->format('%i') < 30) {
-            return 4;
+        // $allowedDate = new DateTime($latestItemAddDate->format('Y-m-d H:i:s'));
+        // $allowedDate = $allowedDate->add(new DateInterval('PT30M')); // latestItem add date + 30 minutes
+        $interval = $latestItemAddDate->diff($item->getCreatedAt());
+        $interval = (int) $interval->format('%i');
+        var_dump($latestItemAddDate->format('Y-m-d H:i:s'));
+        var_dump(date('Y-m-d H:i:s'));
+        var_dump($interval);
+        var_dump('---');
+        if($interval < 30) {
+            return null;
         }
 
         return $item;
