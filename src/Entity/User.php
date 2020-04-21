@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
@@ -48,6 +50,16 @@ class User
      * @ORM\ManyToOne(targetEntity="App\Entity\Todolist", inversedBy="user_id")
      */
     private $todolist;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Email", mappedBy="receiver")
+     */
+    private $emails;
+
+    public function __construct()
+    {
+        $this->emails = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -144,6 +156,37 @@ class User
     public function setTodolist(?Todolist $todolist): self
     {
         $this->todolist = $todolist;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Email[]
+     */
+    public function getEmails(): Collection
+    {
+        return $this->emails;
+    }
+
+    public function addEmail(Email $email): self
+    {
+        if (!$this->emails->contains($email)) {
+            $this->emails[] = $email;
+            $email->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEmail(Email $email): self
+    {
+        if ($this->emails->contains($email)) {
+            $this->emails->removeElement($email);
+            // set the owning side to null (unless already changed)
+            if ($email->getReceiver() === $this) {
+                $email->setReceiver(null);
+            }
+        }
 
         return $this;
     }

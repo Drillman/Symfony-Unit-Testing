@@ -17,11 +17,17 @@ final class TodolistTest extends TestCase
         $this->user->setName("Lucas");
         $this->user->setFirstname("Lavander");
         $this->user->setPassword("TestDepuisLespace");
-        $this->user->setAge(16);
+        $this->user->setAge(21);
         $this->user->setEmail("Lucaslavander@test.fr");
 
         $this->todolist = new TodoList();
-        $this->todolist->addUserId($this->user);
+        $this->todolist->setUserId($this->user);
+
+        $initialItem = new Item();
+        $initialItem->setName('inital item');
+        $initialItem->setCreatedAt(new DateTime());
+
+        $this->todolist->addItem($initialItem);
 
         $this->validItem = new Item();
         $this->validItem->setName('learn Python');

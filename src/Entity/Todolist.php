@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
-use DateInterval;
 use DateTime;
+use DateInterval;
+use App\Entity\User;
+use Twig\Cache\NullCache;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\EmailController;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,7 +25,7 @@ class Todolist
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="todolist")
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="todolist")
      */
     private $user_id;
 
@@ -43,32 +46,16 @@ class Todolist
     }
 
     /**
-     * @return Collection|User[]
+     * @return User
      */
-    public function getUserId(): Collection
+    public function getUserId()
     {
         return $this->user_id;
     }
 
-    public function addUserId(User $userId): self
+    public function setUserId(User $userId): self
     {
-        if (!$this->user_id->contains($userId)) {
-            $this->user_id[] = $userId;
-            $userId->setTodolist($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserId(User $userId): self
-    {
-        if ($this->user_id->contains($userId)) {
-            $this->user_id->removeElement($userId);
-            // set the owning side to null (unless already changed)
-            if ($userId->getTodolist() === $this) {
-                $userId->setTodolist(null);
-            }
-        }
+        $this->user_id = $userId;
 
         return $this;
     }
@@ -87,6 +74,7 @@ class Todolist
             $this->items[] = $item;
             $item->setTodolist($this);
         }
+        EmailController::sendEmail($this->getUserId());
 
         return $this;
     }
@@ -115,17 +103,14 @@ class Todolist
         }
         // Test if the item name is unique
         $itemsName = $todoListItems->map(function($item) {
-            var_dump($item);
-            return $item->name;
+            return $item->getName();
         });
         if (in_array($item->getName(), (array) $itemsName)) {
             return 3;
         }
 
         // Test if it's been at least 30 minutes since the previous creation
-        $latestItemAddDate = array_reduce((array) $todoListItems, function($acc, $el) {
-            return $el->getId() > $acc->getId() ? $el : $acc;
-        })->getCreatedAt();
+        $latestItemAddDate = $todoListItems->last()->getCreatedAt();
         if (!$latestItemAddDate) { return $item; }
         $allowedDate = new DateTime($latestItemAddDate->format('Y-m-d H:i:s'));
         $allowedDate = $allowedDate->add(new DateInterval('PT30M')); // latestItem add date + 30 minutes
