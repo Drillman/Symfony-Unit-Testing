@@ -112,14 +112,8 @@ class Todolist
         // Test if it's been at least 30 minutes since the previous creation
         $latestItemAddDate = $todoListItems->last()->getCreatedAt();
         if (!$latestItemAddDate) { return $item; }
-        // $allowedDate = new DateTime($latestItemAddDate->format('Y-m-d H:i:s'));
-        // $allowedDate = $allowedDate->add(new DateInterval('PT30M')); // latestItem add date + 30 minutes
         $interval = $latestItemAddDate->diff($item->getCreatedAt());
         $interval = (int) $interval->format('%i');
-        var_dump($latestItemAddDate->format('Y-m-d H:i:s'));
-        var_dump(date('Y-m-d H:i:s'));
-        var_dump($interval);
-        var_dump('---');
         if($interval < 30) {
             return null;
         }
