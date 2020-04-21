@@ -1,9 +1,10 @@
 <?php
+use Mockery as m;
 use App\Entity\Item;
 use App\Entity\User;
-
 use App\Entity\Todolist;
 use PHPUnit\Framework\TestCase;
+use App\Controller\EmailController;
 
 final class TodolistTest extends TestCase
 {
@@ -37,10 +38,13 @@ final class TodolistTest extends TestCase
         $this->validItem->setCreatedAt($creationDate);
 
     }
-    public function testCanAddItem(): void
+    public function testSendEmail(): void
     {
         $validation = $this->todolist->canAddItem($this->validItem);
         $this->assertEquals($this->validItem, $validation);
+        $mock = m::mock(EmailController::class);
+        $mock->shouldReceive('sendEmail')->with($this->user)->andReturn(true);
+        $this->assertEquals(true,$mock->sendEmail($this->user));
     }
 
     public function testWrongInterval(): void
@@ -77,5 +81,9 @@ final class TodolistTest extends TestCase
         $this->todolist->addItem($this->validItem);
         $validation = $this->todolist->canAddItem($this->validItem);
         $this->assertEquals(null, $validation);
+    }
+
+    public function tearDown(): void {
+        m::close();
     }
 }
