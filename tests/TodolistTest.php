@@ -40,11 +40,12 @@ final class TodolistTest extends TestCase
     }
     public function testSendEmail(): void
     {
-        $validation = $this->todolist->canAddItem($this->validItem);
-        $this->assertEquals($this->validItem, $validation);
-        $mock = m::mock(EmailController::class);
-        $mock->shouldReceive('sendEmail')->with($this->user)->andReturn(true);
-        $this->assertEquals(true,$mock->sendEmail($this->user));
+        $emailService = m::mock(EmailController::class);
+        $emailService->shouldReceive('sendEmail')->andReturn(true);
+        $this->assertEquals(
+            $this->todolist,
+            $this->todolist->addItem($this->validItem, $emailService)
+        );
     }
 
     public function testWrongInterval(): void
@@ -84,6 +85,6 @@ final class TodolistTest extends TestCase
     }
 
     public function tearDown(): void {
-        m::close();
+        Mockery::close();
     }
 }

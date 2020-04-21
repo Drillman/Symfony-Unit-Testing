@@ -2,14 +2,9 @@
 
 namespace App\Entity;
 
-use Mockery;
-use DateTime;
-use DateInterval;
 use App\Entity\User;
-use Twig\Cache\NullCache;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\EmailController;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -69,13 +64,16 @@ class Todolist
         return $this->items;
     }
 
-    public function addItem(Item $item): self
+    public function addItem(Item $item, EmailController $emailService = null): self
     {
         if (!$this->items->contains($item)) {
             $this->items[] = $item;
             $item->setTodolist($this);
         }
-        EmailController::sendEmail($this->getUserId());
+        if (!$emailService) {
+            $emailService = new EmailController();
+        }
+        $emailService::sendEmail($this->getUserId());
 
         return $this;
     }
