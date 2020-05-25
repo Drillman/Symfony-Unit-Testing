@@ -39,13 +39,12 @@ class TodolistController extends AbstractController
         $todolist = new Todolist();
         $user = new User();
         $data = \json_decode($request->getContent());
-        var_dump($data);
         $user->setId($data->id)
         ->setEmail($data->email)
         ->setAge($data->age)
         ->setPassword($data->password);
         $todolist->setUser($user);
-        
+       
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($todolist);
         $entityManager->flush();

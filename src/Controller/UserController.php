@@ -35,11 +35,12 @@ class UserController extends AbstractController
     public function new(Request $request): Response
     {
         $user = new User();
-        $user->setName($request->get('name'))
-            ->setFirstname($request->get('firstname'))
-            ->setEmail($request->get('email'))
-            ->setPassword($request->get('password'))
-            ->setAge($request->get('age'));
+        $data = \json_decode($request->getContent());
+        $user->setName($data->name)
+            ->setFirstname($data->firstname)
+            ->setEmail($data->email)
+            ->setPassword($data->password)
+            ->setAge($data->age);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);

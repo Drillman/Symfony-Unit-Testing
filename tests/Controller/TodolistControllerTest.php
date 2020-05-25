@@ -22,7 +22,8 @@ class TodolistControllerTest extends WebTestCase
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
-            '{  "id":"2",
+            '{   
+                "id":"2",
                 "email":"tcorio@myges.fr",
                 "age":"22",
                 "password":"test1234"
@@ -67,5 +68,25 @@ class TodolistControllerTest extends WebTestCase
             ['http://localhost/item/']
             
         ];
+    }
+
+    public function testPostUser()
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            'user/new',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            '{  
+                "name":"Titi",
+                "firstname":"Toto",
+                "email":"tcorio@myges.fr",
+                "age":"22",
+                "password":"test1234"
+            }'
+        );
+        $this->assertEquals(201, $client->getResponse()->getStatusCode());
     }
 }
