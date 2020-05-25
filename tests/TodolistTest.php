@@ -22,7 +22,7 @@ final class TodolistTest extends TestCase
         $this->user->setEmail("Lucaslavander@test.fr");
 
         $this->todolist = new TodoList();
-        $this->todolist->setUserId($this->user);
+        $this->todolist->setUser($this->user);
 
         $initialItem = new Item();
         $initialItem->setName('inital item');

@@ -3,14 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Item;
+use App\Entity\User;
 use App\Entity\Todolist;
 use App\Form\TodolistType;
 use App\Repository\TodolistRepository;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -23,12 +24,7 @@ class TodolistController extends AbstractController
      */
     public function index(TodolistRepository $todolistRepository,SerializerInterface $serializer): Response
     {
-        $todoList = new TodoList();
-        $item = new Item();
-        $item->setContent('This is my content');
-        $res = $todoList->canAddItem($item);
-        $res = $serializer->serialize($res, 'json');
-        // $todolistJson = $serializer->serialize($todolistRepository->findAll(), 'json');
+        $res = $serializer->serialize($todolistRepository->findAll(), 'json');
         $response = new Response($res);
         $response->headers->set('Content-Type', 'application/json');
 
@@ -36,26 +32,26 @@ class TodolistController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="todolist_new", methods={"GET","POST"})
+     * @Route("/new", name="todolist_new", methods={"POST"})
      */
     public function new(Request $request): Response
     {
         $todolist = new Todolist();
-        $form = $this->createForm(TodolistType::class, $todolist);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($todolist);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('todolist_index');
-        }
-
-        return $this->render('todolist/new.html.twig', [
-            'todolist' => $todolist,
-            'form' => $form->createView(),
-        ]);
+        $user = new User();
+        $data = \json_decode($request->getContent());
+        var_dump($data);
+        $user->setId($data->id)
+        ->setEmail($data->email)
+        ->setAge($data->age)
+        ->setPassword($data->password);
+        $todolist->setUser($user);
+        
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($todolist);
+        $entityManager->flush();
+        $response = new Response(null,201,[]);
+        return $response;
+        
     }
 
     /**

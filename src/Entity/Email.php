@@ -69,7 +69,6 @@ class Email
     public function setReceiver(?User $receiver): self
     {
         $this->receiver = $receiver;
-
         return $this;
     }
 }

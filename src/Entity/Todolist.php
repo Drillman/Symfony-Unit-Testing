@@ -21,9 +21,9 @@ class Todolist
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="todolist")
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="todolist", cascade={"persist"})
      */
-    private $user_id;
+    private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Item", mappedBy="todolist")
@@ -32,7 +32,7 @@ class Todolist
 
     public function __construct()
     {
-        $this->user_id = new ArrayCollection();
+        $this->user = new ArrayCollection();
         $this->items = new ArrayCollection();
     }
 
@@ -44,14 +44,14 @@ class Todolist
     /**
      * @return User
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(User $userId): self
+    public function setUser(User $user): self
     {
-        $this->user_id = $userId;
+        $this->user = $user;
 
         return $this;
     }
@@ -73,7 +73,7 @@ class Todolist
         if (!$emailService) {
             $emailService = new EmailController();
         }
-        $emailService::sendEmail($this->getUserId());
+        $emailService::sendEmail($this->getUser());
 
         return $this;
     }
