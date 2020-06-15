@@ -18,7 +18,7 @@ jobs:
     - name: PHPUnit tests
       uses: php-actions/phpunit@v1
       with:
-        config: ./phpunit.xml
+        config: test/phpunit/phpunit.xml
         memory: 256M
 
 
